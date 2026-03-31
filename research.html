@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>리서치팀 결과보고서 — 회의 중 AI 리서치 UX</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: linear-gradient(135deg, #0f0c29 0%, #1a1145 40%, #24243e 100%);
+    color: #e0e0e0;
+    min-height: 100vh;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── Hero ─────────────────────────── */
+  .hero {
+    text-align: center;
+    padding: 80px 20px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60%; left: -20%;
+    width: 140%; height: 200%;
+    background: radial-gradient(ellipse, rgba(124,58,237,0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero .badge {
+    display: inline-block;
+    padding: 6px 20px;
+    border: 1px solid rgba(167,139,250,0.4);
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #a78bfa;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #a78bfa, #7c3aed, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero .subtitle {
+    font-size: 16px;
+    color: #9ca3af;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .hero .meta {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-size: 13px;
+    color: #6b7280;
+  }
+  .hero .meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* ── Container ───────────────────── */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── TOC ──────────────────────────── */
+  .toc {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 48px;
+    backdrop-filter: blur(12px);
+  }
+  .toc h3 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #a78bfa;
+    margin-bottom: 16px;
+  }
+  .toc ol {
+    list-style: none;
+    counter-reset: toc;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 30px;
+  }
+  .toc li {
+    counter-increment: toc;
+    font-size: 14px;
+    color: #9ca3af;
+  }
+  .toc li::before {
+    content: "0" counter(toc) " ";
+    color: #7c3aed;
+    font-weight: 700;
+    margin-right: 6px;
+  }
+
+  /* ── Section ─────────────────────── */
+  .section {
+    margin-bottom: 56px;
+  }
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #7c3aed;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .section-label .num {
+    background: rgba(124,58,237,0.2);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+  }
+  .section h2 {
+    font-size: clamp(22px, 3.5vw, 30px);
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  .section h2 em {
+    font-style: normal;
+    color: #a78bfa;
+  }
+
+  /* ── Glass card ──────────────────── */
+  .glass {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(12px);
+    transition: border-color 0.3s;
+  }
+  .glass:hover { border-color: rgba(167,139,250,0.25); }
+  .glass h4 {
+    font-size: 17px;
+    color: #fff;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .glass h4 .icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .glass p, .glass li {
+    color: #b0b0c0;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .glass ul { list-style: none; padding-left: 0; }
+  .glass ul li { padding: 4px 0; padding-left: 18px; position: relative; }
+  .glass ul li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: #7c3aed;
+  }
+
+  /* ── Process flow ────────────────── */
+  .process-flow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .process-step {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+  }
+  .process-step .step-num {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    color: #fff;
+    margin: 0 auto 12px;
+  }
+  .process-step h5 {
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .process-step p {
+    font-size: 12px;
+    color: #9ca3af;
+  }
+
+  /* ── Competitor grid ─────────────── */
+  .competitor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .competitor-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 13px;
+  }
+  .competitor-card .cat {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #7c3aed;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .competitor-card .name {
+    color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  /* ── Pain table ──────────────────── */
+  .pain-card {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    align-items: start;
+  }
+  .pain-card .rank {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 18px;
+    color: #fff;
+  }
+  .pain-card .rank.critical { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .pain-card .rank.high { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .pain-card .rank.medium { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+  .pain-card .detail h5 { font-size: 16px; color: #fff; margin-bottom: 6px; }
+  .pain-card .detail p { font-size: 13px; color: #9ca3af; margin-bottom: 4px; }
+  .pain-card .tags { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .pain-card .tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #9ca3af;
+  }
+  .pain-card .tag.red { border-color: rgba(239,68,68,0.3); color: #fca5a5; }
+  .pain-card .tag.yellow { border-color: rgba(245,158,11,0.3); color: #fcd34d; }
+  .pain-card .tag.blue { border-color: rgba(59,130,246,0.3); color: #93c5fd; }
+
+  /* ── Interaction compare table ──── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+  .compare-table th {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 2px solid rgba(124,58,237,0.3);
+    color: #a78bfa;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .compare-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: #b0b0c0;
+  }
+  .compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .star { color: #fbbf24; }
+  .check { color: #34d399; }
+  .cross { color: #f87171; }
+
+  /* ── Principle card ──────────────── */
+  .principle-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    border-left: 4px solid;
+  }
+  .principle-card.p1 { border-left-color: #a78bfa; }
+  .principle-card.p2 { border-left-color: #34d399; }
+  .principle-card.p3 { border-left-color: #fbbf24; }
+  .principle-card.p4 { border-left-color: #60a5fa; }
+  .principle-card.p5 { border-left-color: #f472b6; }
+  .principle-card .principle-head {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .principle-card .principle-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    background: rgba(255,255,255,0.06);
+  }
+  .principle-card .principle-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .principle-card .principle-sub { font-size: 13px; color: #9ca3af; }
+  .principle-card .evidence {
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  .principle-card .evidence-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #7c3aed;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .principle-card .metrics {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .principle-card .metric {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 12px 16px;
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+  }
+  .principle-card .metric .val {
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+  }
+  .principle-card .metric .label {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 2px;
+  }
+
+  /* ── ROI box ─────────────────────── */
+  .roi-box {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 16px;
+    align-items: center;
+    margin: 24px 0;
+  }
+  .roi-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 24px;
+    text-align: center;
+  }
+  .roi-card.before { border-color: rgba(239,68,68,0.2); }
+  .roi-card.after { border-color: rgba(52,211,153,0.2); }
+  .roi-card .amount {
+    font-size: 32px;
+    font-weight: 900;
+  }
+  .roi-card.before .amount { color: #f87171; }
+  .roi-card.after .amount { color: #34d399; }
+  .roi-card .desc {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-top: 4px;
+  }
+  .roi-arrow {
+    text-align: center;
+    font-size: 28px;
+    color: #7c3aed;
+  }
+
+  /* ── Insight highlight ───────────── */
+  .insight-box {
+    background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(167,139,250,0.08));
+    border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 16px;
+    padding: 32px;
+    margin: 24px 0;
+  }
+  .insight-box h4 {
+    font-size: 16px;
+    color: #a78bfa;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .insight-box .insight-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 14px;
+    color: #d0d0e0;
+  }
+  .insight-box .insight-item:last-child { border-bottom: none; }
+  .insight-box .insight-num {
+    display: inline-block;
+    width: 24px; height: 24px;
+    background: rgba(124,58,237,0.3);
+    border-radius: 6px;
+    text-align: center;
+    line-height: 24px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #a78bfa;
+    margin-right: 10px;
+  }
+
+  /* ── Priority matrix ─────────────── */
+  .priority-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .priority-col h5 {
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .priority-col.must h5 { background: rgba(239,68,68,0.15); color: #fca5a5; }
+  .priority-col.nice h5 { background: rgba(245,158,11,0.15); color: #fcd34d; }
+  .priority-col.future h5 { background: rgba(59,130,246,0.15); color: #93c5fd; }
+  .priority-col ul {
+    list-style: none;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 0 0 10px 10px;
+    padding: 16px;
+  }
+  .priority-col li {
+    padding: 8px 0;
+    font-size: 13px;
+    color: #b0b0c0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .priority-col li:last-child { border-bottom: none; }
+
+  /* ── Quote ────────────────────────── */
+  .quote-block {
+    text-align: center;
+    padding: 40px 32px;
+    margin: 40px 0;
+    position: relative;
+  }
+  .quote-block::before {
+    content: '\201C';
+    font-size: 120px;
+    color: rgba(124,58,237,0.15);
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Georgia, serif;
+  }
+  .quote-block p {
+    font-size: 20px;
+    font-weight: 500;
+    color: #d0d0e0;
+    max-width: 640px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .quote-block .author {
+    font-size: 13px;
+    color: #7c3aed;
+    margin-top: 16px;
+  }
+
+  /* ── Footer ──────────────────────── */
+  .footer {
+    text-align: center;
+    padding: 40px 20px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  /* ── Responsive ──────────────────── */
+  @media (max-width: 640px) {
+    .toc ol { grid-template-columns: 1fr; }
+    .roi-box { grid-template-columns: 1fr; }
+    .roi-arrow { transform: rotate(90deg); }
+    .priority-grid { grid-template-columns: 1fr; }
+    .process-flow { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="badge">Research Team Report</div>
+  <h1>리서치팀 <em>결과보고서</em></h1>
+  <p class="subtitle">회의 중 실시간 AI 리서치를 위한 비채팅 인터랙션 설계 — 리서치 과정, 참고 자료, 핵심 인사이트, 최종 결론</p>
+  <div class="meta">
+    <span>📅 2026.03.29</span>
+    <span>🔍 리서치팀</span>
+    <span>📊 22개 서비스 분석</span>
+    <span>🎯 5대 원칙 도출</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══ TOC ═══ -->
+<div class="toc">
+  <h3>목차</h3>
+  <ol>
+    <li>리서치 수행 과정</li>
+    <li>경쟁 서비스 분석 (22개)</li>
+    <li>핵심 페인포인트 (6가지)</li>
+    <li>비채팅 인터랙션 레퍼런스 (7가지)</li>
+    <li>5대 설계 원칙 도출</li>
+    <li>시장 데이터 & ROI 분석</li>
+    <li>최종 인사이트 & 결론</li>
+    <li>권고사항 & 다음 단계</li>
+  </ol>
+</div>
+
+<!-- ═══ SECTION 1 — 리서치 수행 과정 ═══ -->
+<div class="section">
+  <div class="section-label"><span class="num">01</span> RESEARCH PROCESS</div>
+  <h2>리서치 <em>수행 과정</em></h2>
+  <p style="color:#9ca3af; margin-bottom:24px;">리서치팀은 체계적인 3단계 프로세스를 통해 최적의 솔루션을 도출했습니다.</p>
+
+  <div class="process-flow">
+    <div class="process-step">
+      <div class="step-num">1</div>
+      <h5>2차 자료 조사</h5>
+      <p>경쟁사 22개 서비스 웹사이트 분석, 기술 블로그/문서 검토, 사용자 리뷰 분석 (ProductHunt, G2 등)</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">2</div>
+      <h5>패턴 분석</h5>
+      <p>7가지 비채팅 인터랙션 패턴 벤치마킹, 기술 성숙도 평가, 회의 문화 연구</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">3</div>
+      <h5>페인포인트 도출</h5>
+      <p>회의 중 AI 사용 시나리오 분석, 사용자 행동 관찰 기반 추론, 우선순위 매핑</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">4</div>
+      <h5>원칙 & 전략 도출</h5>
+      <p>분석 결과 종합하여 5대 설계 원칙 수립, ROI 산출, 권고안 작성</p>
+    </div>
+  </div>
+
+  <div class="glass">
+    <h4><span class="icon" style="background:rgba(124,58,237,0.2);">📚</span> 참고한 기술 및 서비스</h4>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:12px;">
+      <div>
+        <p style="color:#a78bfa; font-weight:700; font-size:13px; margin-bottom:6px;">음성 인터페이스</p>
+        <ul><li>Apple Siri</li><li>Google Assistant</li><li>Amazon Alexa</li></ul>
+      </div>
+      <div>
+        <p style="color:#a78bfa; font-weight:700; font-size:13px; margin-bottom:6px;">AR / 웨어러블</p>
+        <ul><li>Apple Vision Pro</li><li>Microsoft HoloLens</li><li>Google Glass</li></ul>
+      </div>
+      <div>
+        <p style="color:#a78bfa; font-weight:700; font-size:13px; margin-bottom:6px;">회의 AI</p>
+        <ul><li>ChatGPT / GPT-4</li><li>Claude</li><li>Gemini</li></ul>
+      </div>
+      <div>
+        <p style="color:#a78bfa; font-weight:700; font-size:13px; margin-bottom:6px;">UI / 디자인 패턴</p>
+        <ul><li>Glassmorphism</li><li>Card-based UI (Material)</li><li>Progressive Disclosure</li></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 2 — 경쟁 서비스 분석 ═══ -->
+<div class="section">
+  <div class="section-label"><span class="num">02</span> COMPETITIVE ANALYSIS</div>
+  <h2>경쟁 서비스 분석 — <em>22개 서비스</em></h2>
+
+  <div class="insight-box" style="margin-bottom:24px;">
+    <h4>💡 핵심 발견</h4>
+    <div class="insight-item">분석한 22개 서비스 모두 <strong style="color:#fff;">"회의 후" 정리</strong>에만 집중하고 있었습니다. <strong style="color:#a78bfa;">회의 "중" 실시간 리서치</strong>를 지원하는 서비스는 사실상 전무 — 이것이 가장 큰 시장 기회입니다.</div>
+  </div>
+
+  <div class="competitor-grid">
+    <div class="competitor-card"><div class="cat">녹음 & 전사</div><div class="name">Otter.ai</div></div>
+    <div class="competitor-card"><div class="cat">녹음 & 전사</div><div class="name">Rev</div></div>
+    <div class="competitor-card"><div class="cat">녹음 & 전사</div><div class="name">Fireflies</div></div>
+    <div class="competitor-card"><div class="cat">녹음 & 전사</div><div class="name">Sonix</div></div>
+    <div class="competitor-card"><div class="cat">AI 회의 정리</div><div class="name">Teams Copilot</div></div>
+    <div class="competitor-card"><div class="cat">AI 회의 정리</div><div class="name">Notion AI</div></div>
+    <div class="competitor-card"><div class="cat">AI 회의 정리</div><div class="name">Google Meet 기록</div></div>
+    <div class="competitor-card"><div class="cat">AI 회의 정리</div><div class="name">Zoom AI Companion</div></div>
+    <div class="competitor-card"><div class="cat">협업 & 노트</div><div class="name">Notion</div></div>
+    <div class="competitor-card"><div class="cat">협업 & 노트</div><div class="name">Confluence</div></div>
+    <div class="competitor-card"><div class="cat">협업 & 노트</div><div class="name">OneNote</div></div>
+    <div class="competitor-card"><div class="cat">협업 & 노트</div><div class="name">Google Docs</div></div>
+    <div class="competitor-card"><div class="cat">회의 플랫폼</div><div class="name">Slack</div></div>
+    <div class="competitor-card"><div class="cat">회의 플랫폼</div><div class="name">Microsoft Teams</div></div>
+    <div class="competitor-card"><div class="cat">회의 플랫폼</div><div class="name">Asana</div></div>
+    <div class="competitor-card"><div class="cat">회의 플랫폼</div><div class="name">Monday.com</div></div>
+    <div class="competitor-card"><div class="cat">음성 인터페이스</div><div class="name">Alexa</div></div>
+    <div class="competitor-card"><div class="cat">음성 인터페이스</div><div class="name">Google Assistant</div></div>
+    <div class="competitor-card"><div class="cat">음성 인터페이스</div><div class="name">Siri</div></div>
+    <div class="competitor-card"><div class="cat">음성 인터페이스</div><div class="name">기타 음성 API</div></div>
+  </div>
+
+  <div class="glass">
+    <h4><span class="icon" style="background:rgba(239,68,68,0.15);">🔎</span> 분석에서 얻은 인사이트</h4>
+    <ul>
+      <li><strong style="color:#fff;">사후 처리 중심:</strong> 모든 경쟁사는 회의 이후 자동 정리·요약·검색 기능만 제공</li>
+      <li><strong style="color:#fff;">실시간 분석 미흡:</strong> 회의 중 실시간 정보 검색을 지원하는 통합 기능은 극소수</li>
+      <li><strong style="color:#fff;">블루오션 확인:</strong> "회의 중(in-meeting)" 실시간 리서치·팩트체크·정보 검색의 완벽한 통합이 미개척 영역</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══ SECTION 3 — 페인포인트 ═══ -->
+<div class="section">
+  <div class="section-label"><span class="num">03</span> PAIN POINTS</div>
+  <h2>핵심 페인포인트 — <em>6가지</em></h2>
+  <p style="color:#9ca3af; margin-bottom:24px;">회의 중 AI 리서치를 시도할 때 실제로 직면하는 문제들을 심각도·빈도 기준으로 우선순위를 매겼습니다.</p>
+
+  <div class="pain-card">
+    <div class="rank critical">1</div>
+    <div class="detail">
+      <h5>경쟁사 정보 검색 시 아이컨택 단절</h5>
+      <p>경쟁사 정보가 급하게 필요한데, 타이핑하면 고객과 눈맞춤이 끊김 → 전문성 손상, 신뢰도 하락</p>
+      <p style="color:#6b7280;">발생 상황: B2B 영업 회의, 클라이언트 미팅 중 경쟁 포지셔닝 논의</p>
+      <div class="tags"><span class="tag red">심각도: 높음</span><span class="tag red">빈도: 자주</span><span class="tag">소요: 30~60초</span></div>
+    </div>
+  </div>
+
+  <div class="pain-card">
+    <div class="rank critical">2</div>
+    <div class="detail">
+      <h5>팀 전체 대기 시간 발생</h5>
+      <p>1명이 기술 스펙을 검색하면 팀 전체가 대기 → 회의 리듬 완전히 깨지고 생산성 하락</p>
+      <p style="color:#6b7280;">발생 상황: 기술 스펙 검증, 비용 구조 확인, 정책 조회 필요 시</p>
+      <div class="tags"><span class="tag red">심각도: 높음</span><span class="tag red">빈도: 자주</span><span class="tag">전체 영향</span></div>
+    </div>
+  </div>
+
+  <div class="pain-card">
+    <div class="rank high">3</div>
+    <div class="detail">
+      <h5>장시간 스크롤과 텍스트 읽기</h5>
+      <p>AI 응답이 길고 복잡하면 회의 중 다 읽기 어려움 → 정보 과부하, 핵심 파악 실패</p>
+      <p style="color:#6b7280;">소요 시간: 10~20초 (읽기 + 스크롤)</p>
+      <div class="tags"><span class="tag yellow">심각도: 중간</span><span class="tag red">빈도: 자주</span></div>
+    </div>
+  </div>
+
+  <div class="pain-card">
+    <div class="rank high">4</div>
+    <div class="detail">
+      <h5>정확성 요구로 인한 서두름 불가</h5>
+      <p>규정/정책 확인은 정확성이 필수적인데 빠르게 확인 불가 → "틀린 정보"가 "빠른 정보"보다 위험</p>
+      <p style="color:#6b7280;">발생 상황: 법무/컴플라이언스 관련 회의, 규제 확인</p>
+      <div class="tags"><span class="tag red">심각도: 높음</span><span class="tag yellow">빈도: 가끔</span></div>
+    </div>
+  </div>
+
+  <div class="pain-card">
+    <div class="rank medium">5</div>
+    <div class="detail">
+      <h5>준비 부족 인상 발생</h5>
+      <p>회의 직전 고객 정보 확인 시 폰을 보면 "준비가 안 된 사람"처럼 보임 → 신뢰도 저하</p>
+      <p style="color:#6b7280;">발생 상황: 임원진 미팅, 처음 만나는 클라이언트와의 회의</p>
+      <div class="tags"><span class="tag yellow">심각도: 중간</span><span class="tag red">빈도: 자주</span><span class="tag">심리적 영향 높음</span></div>
+    </div>
+  </div>
+
+  <div class="pain-card">
+    <div class="rank medium">6</div>
+    <div class="detail">
+      <h5>음성 입력 시 배경음 간섭</h5>
+      <p>회의실 배경음이 있을 때 음성 명령이 정확하지 않음 → 재시도 필요, 추가 시간 소요</p>
+      <p style="color:#6b7280;">기술적 한계: 높은 배경음 환경에서 정확도 급격히 저하</p>
+      <div class="tags"><span class="tag blue">심각도: 낮음~중간</span><span class="tag">빈도: 때때로</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 4 — 인터랙션 레퍼런스 ═══ -->
+<div class="section">
+  <div class="section-label"><span class="num">04</span> INTERACTION REFERENCES</div>
+  <h2>비채팅 인터랙션 레퍼런스 — <em>7가지 패턴</em></h2>
+  <p style="color:#9ca3af; margin-bottom:24px;">채팅 기반이 아닌 대안적 인터랙션 패턴을 조사하고, 구현 난도·회의 자연성·정확도를 기준으로 비교 평가했습니다.</p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px;">
+    <div class="glass">
+      <h4><span class="icon" style="background:rgba(52,211,153,0.15);">🎙️</span> 음성 입력</h4>
+      <ul>
+        <li>손과 눈을 사용하지 않고 자연 언어로 표현</li>
+        <li><strong style="color:#34d399;">장점:</strong> 타이핑 불필요, 눈 이탈 없음</li>
+        <li><strong style="color:#f87171;">단점:</strong> 배경음 간섭, 개인정보 노출 가능성</li>
+      </ul>
+    </div>
+    <div class="glass">
+      <h4><span class="icon" style="background:rgba(251,191,36,0.15);">👋</span> 제스처 인식</h4>
+      <ul>
+        <li>손짓으로 커맨드 전달, AR 환경에서 유용</li>
+        <li><strong style="color:#34d399;">장점:</strong> 음성보다 조용, 직관적</li>
+        <li><strong style="color:#f87171;">단점:</strong> 기술 미성숙, 인식률 낮음</li>
+      </ul>
+    </div>
+    <div class="glass">
+      <h4><span class="icon" style="background:rgba(96,165,250,0.15);">🥽</span> AR 글래스</h4>
+      <ul>
+        <li>안경형 웨어러블로 손·눈 완전 해방</li>
+        <li><strong style="color:#34d399;">장점:</strong> 가장 완벽한 형태</li>
+        <li><strong style="color:#f87171;">단점:</strong> 초고가(Vision Pro 등), 대중화 미흡</li>
+      </ul>
+    </div>
+    <div class="glass">
+      <h4><span class="icon" style="background:rgba(167,139,250,0.15);">👁️</span> 글랜스 위젯</h4>
+      <ul>
+        <li>작은 영역에 핵심 정보만 표시, 3~5초 내 이해</li>
+        <li><strong style="color:#34d399;">장점:</strong> 빠른 인식, 즉시 구현 가능</li>
+        <li><strong style="color:#f87171;">단점:</strong> 상세 정보는 별도 액션 필요</li>
+      </ul>
+    </div>
+    <div class="glass">
+      <h4><span class="icon" style="background:rgba(244,114,182,0.15);">🌫️</span> 앰비언트 UI</h4>
+      <ul>
+        <li>배경에 녹아드는 UI, 필요할 때만 표면화</li>
+        <li><strong style="color:#34d399;">장점:</strong> 방해 최소화, 미니멀</li>
+        <li><strong style="color:#f87171;">단점:</strong> 발견 가능성 낮을 수 있음</li>
+      </ul>
+    </div>
+    <div class="glass">
+      <h4><span class="icon" style="background:rgba(52,211,153,0.15);">📋</span> 프리셋/템플릿</h4>
+      <ul>
+        <li>사전 정의된 옵션 선택, 1~2탭으로 검색 시작</li>
+        <li><strong style="color:#34d399;">장점:</strong> 입력 시간 1초, 정확한 검색어 보장</li>
+        <li><strong style="color:#f87171;">단점:</strong> 미리 정해진 항목만 가능</li>
+      </ul>
+    </div>
+    <div class="glass" style="grid-column: 1 / -1;">
+      <h4><span class="icon" style="background:rgba(251,191,36,0.15);">🧠</span> 상황 인식형 응답</h4>
+      <ul>
+        <li>LLM이 회의 맥락을 자동 파악해 필요한 형식으로 응답 자동 제공</li>
+        <li><strong style="color:#34d399;">장점:</strong> 추가 명령 불필요, 가장 관련성 높은 정보</li>
+        <li><strong style="color:#f87171;">단점:</strong> 맥락 파악 정확도 의존, 프롬프트 엔지니어링 필수</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="glass">
+    <h4 style="margin-bottom:16px;">📊 인터랙션 패턴 비교 평가</h4>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>패턴</th>
+          <th>구현 난도</th>
+          <th>현재 기술</th>
+          <th>회의 자연성</th>
+          <th>정확도</th>
+          <th>추천도</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="color:#fff;">프리셋/템플릿</td><td>매우 낮음</td><td class="check">✓</td><td>높음</td><td>최고</td><td><span class="star">★★★★★</span></td></tr>
+        <tr><td style="color:#fff;">글랜스 위젯</td><td>낮음</td><td class="check">✓</td><td>높음</td><td>높음</td><td><span class="star">★★★★★</span></td></tr>
+        <tr><td style="color:#fff;">앰비언트 UI</td><td>중간</td><td class="check">✓</td><td>높음</td><td>높음</td><td><span class="star">★★★★</span></td></tr>
+        <tr><td style="color:#fff;">상황 인식 응답</td><td>높음</td><td class="check">✓</td><td>최고</td><td>중간</td><td><span class="star">★★★★</span></td></tr>
+        <tr><td style="color:#fff;">음성 입력</td><td>중간</td><td class="check">✓</td><td>높음</td><td>중간</td><td><span class="star">★★★</span></td></tr>
+        <tr><td style="color:#fff;">제스처 인식</td><td>높음</td><td class="cross">✗</td><td>높음</td><td>낮음</td><td><span class="star">★★</span></td></tr>
+        <tr><td style="color:#fff;">AR 글래스</td><td>매우 높음</td><td class="check">✓</td><td>최고</td><td>높음</td><td><span class="star">★</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight-box">
+    <h4>💡 패턴 분석에서 얻은 인사이트</h4>
+    <div class="insight-item"><span class="insight-num">1</span><strong style="color:#fff;">프리셋 템플릿</strong>이 가장 실용적 — 구현 난도 최저, 정확도 최고, 즉시 적용 가능</div>
+    <div class="insight-item"><span class="insight-num">2</span><strong style="color:#fff;">글랜스 위젯 + 앰비언트 UI</strong> 조합이 "회의 중 자연스러움"을 극대화</div>
+    <div class="insight-item"><span class="insight-num">3</span>AR 글래스는 이상적이나 현 시점에서 <strong style="color:#fff;">비용·대중화 장벽</strong>이 너무 높음</div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 5 — 5대 설계 원칙 ═══ -->
+<div class="section">
+  <div class="section-label"><span class="num">05</span> DESIGN PRINCIPLES</div>
+  <h2>5대 설계 원칙 <em>도출</em></h2>
+  <p style="color:#9ca3af; margin-bottom:24px;">경쟁 분석, 페인포인트, 인터랙션 레퍼런스를 종합하여 도출한 핵심 설계 원칙입니다. 각 원칙에는 근거·구현 방식·성공 지표를 포함합니다.</p>
+
+  <div class="principle-card p1">
+    <div class="principle-head">
+      <div class="principle-icon">🖐️</div>
+      <div><div class="principle-title">손과 눈의 해방</div><div class="principle-sub">Liberation of Hands & Eyes</div></div>
+    </div>
+    <p style="color:#d0d0e0; font-size:14px;">타이핑이나 화면 주시 없이 사용할 수 있어야 합니다.</p>
+    <div class="evidence">
+      <div class="evidence-label">도출 근거</div>
+      <p style="color:#b0b0c0; font-size:13px;">페인포인트 #1(아이컨택 단절) + 경쟁사 분석(모든 채팅형 서비스가 이 문제 해결 못함) + 사용자 니즈("폰을 안 보고도 정보를 얻고 싶음")</p>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="val">1초</div><div class="label">입력 시간 (30~60초→)</div></div>
+      <div class="metric"><div class="val">0회</div><div class="label">타이핑 횟수</div></div>
+      <div class="metric"><div class="val">3초</div><div class="label">최대 눈 이탈 시간</div></div>
+    </div>
+  </div>
+
+  <div class="principle-card p2">
+    <div class="principle-head">
+      <div class="principle-icon">⏩</div>
+      <div><div class="principle-title">회의 흐름 불간섭</div><div class="principle-sub">Non-Blocking Meeting Flow</div></div>
+    </div>
+    <p style="color:#d0d0e0; font-size:14px;">1명의 검색이 다른 팀원의 회의 진행을 멈추게 하면 안 됩니다.</p>
+    <div class="evidence">
+      <div class="evidence-label">도출 근거</div>
+      <p style="color:#b0b0c0; font-size:13px;">페인포인트 #2(팀 전체 대기 시간) — 한 사람의 액션이 전체 회의를 중단시키는 구조적 문제</p>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="val">0분</div><div class="label">회의 중단 시간</div></div>
+      <div class="metric"><div class="val">100%</div><div class="label">발언 연속성 보장</div></div>
+    </div>
+  </div>
+
+  <div class="principle-card p3">
+    <div class="principle-head">
+      <div class="principle-icon">🧠</div>
+      <div><div class="principle-title">맥락 인식 응답</div><div class="principle-sub">Context-Aware Response</div></div>
+    </div>
+    <p style="color:#d0d0e0; font-size:14px;">회의의 상황/맥락에 맞는 답변을 제공합니다.</p>
+    <div class="evidence">
+      <div class="evidence-label">도출 근거</div>
+      <p style="color:#b0b0c0; font-size:13px;">페인포인트 #5(장시간 텍스트 읽기) + 인지 심리학("필요한 정보"와 "모든 정보"는 다름) — 맥락에 따라 비교표·1문장·yes/no 등 형식 자동 전환</p>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="val">3~5줄</div><div class="label">평균 응답 길이</div></div>
+      <div class="metric"><div class="val">85%+</div><div class="label">적절한 형식 비율</div></div>
+      <div class="metric"><div class="val">20%-</div><div class="label">추가 질문 비율</div></div>
+    </div>
+  </div>
+
+  <div class="principle-card p4">
+    <div class="principle-head">
+      <div class="principle-icon">📊</div>
+      <div><div class="principle-title">점진적 정보 공개</div><div class="principle-sub">Progressive Disclosure</div></div>
+    </div>
+    <p style="color:#d0d0e0; font-size:14px;">핵심만 먼저 보여주고, 상세 정보는 사용자가 선택할 때 제공합니다.</p>
+    <div class="evidence">
+      <div class="evidence-label">도출 근거</div>
+      <p style="color:#b0b0c0; font-size:13px;">인지 심리학(정보 과부하→의사결정 방해) + 글랜스 위젯 패턴(3~5초 읽기 가능) — L1(1~3줄, 3초), L2(접기/펼침), L3(출처/근거) 3단계 계층 구조</p>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="val">70%</div><div class="label">L1만으로 의사결정 가능</div></div>
+      <div class="metric"><div class="val">3초</div><div class="label">평균 읽기 시간</div></div>
+      <div class="metric"><div class="val">30%-</div><div class="label">상세 펼치기 필요 비율</div></div>
+    </div>
+  </div>
+
+  <div class="principle-card p5">
+    <div class="principle-head">
+      <div class="principle-icon">🤝</div>
+      <div><div class="principle-title">사회적 수용성</div><div class="principle-sub">Social Acceptability</div></div>
+    </div>
+    <p style="color:#d0d0e0; font-size:14px;">"기술"이 아닌 "서비스"처럼 느껴지게 — 은폐적이고 미니멀한 인터페이스로 전문성 인상을 유지합니다.</p>
+    <div class="evidence">
+      <div class="evidence-label">도출 근거</div>
+      <p style="color:#b0b0c0; font-size:13px;">페인포인트 #4(준비 부족 인상) + 회의 문화 연구(기술 사용이 전문성 손상으로 인식) — "자신감 있게", "충분히 준비된", "AI 없이 자기 지식으로 답함" 느낌</p>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="val">80%+</div><div class="label">AI 사용 인지 불가</div></div>
+      <div class="metric"><div class="val">↑</div><div class="label">전문성 인상 증가</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 6 — ROI ═══ -->
+<div class="section">
+  <div class="section-label"><span class="num">06</span> MARKET DATA & ROI</div>
+  <h2>시장 데이터 & <em>ROI 분석</em></h2>
+  <p style="color:#9ca3af; margin-bottom:24px;">팀 5명, 시급 4만원(연봉 8천만원 기준), 월 회의 50시간 기준으로 산출한 비용 절감 효과입니다.</p>
+
+  <div class="roi-box">
+    <div class="roi-card before">
+      <p style="color:#fca5a5; font-size:12px; text-transform:uppercase; letter-spacing:1px; font-weight:700;">Before — 채팅 기반</p>
+      <div class="amount">720만원</div>
+      <div class="desc">연간 손실 비용</div>
+      <p style="font-size:12px; color:#6b7280; margin-top:8px;">회의당 84초 × 2.5회 = 3.5분 손실</p>
+    </div>
+    <div class="roi-arrow">→</div>
+    <div class="roi-card after">
+      <p style="color:#6ee7b7; font-size:12px; text-transform:uppercase; letter-spacing:1px; font-weight:700;">After — 5~7초 방식</p>
+      <div class="amount">48만원</div>
+      <div class="desc">연간 손실 비용</div>
+      <p style="font-size:12px; color:#6b7280; margin-top:8px;">회의당 6초 × 2.5회 = 15초 손실</p>
+    </div>
+  </div>
+
+  <div class="glass" style="text-align:center; padding:32px;">
+    <p style="font-size:13px; color:#9ca3af; margin-bottom:8px;">연간 절감액</p>
+    <p style="font-size:48px; font-weight:900; color:#34d399;">672만원</p>
+    <p style="font-size:14px; color:#9ca3af; margin-top:4px;">팀 5명 기준 · 구현 난도 중간~낮음 · 투자 대비 효과 매우 높음</p>
+  </div>
+</div>
+
+<!-- ═══ SECTION 7 — 최종 인사이트 ═══ -->
+<div class="section">
+  <div class="section-label"><span class="num">07</span> FINAL INSIGHTS</div>
+  <h2>최종 인사이트 & <em>결론</em></h2>
+
+  <div class="insight-box" style="margin-bottom:24px;">
+    <h4>🔭 거시적 인사이트</h4>
+    <div class="insight-item"><span class="insight-num">1</span><strong style="color:#fff;">블루오션 확인:</strong> 회의 "중" 실시간 AI 리서치는 완전한 미개척 분야 — 22개 경쟁사 모두 "회의 후"에만 집중</div>
+    <div class="insight-item"><span class="insight-num">2</span><strong style="color:#fff;">기술은 이미 충분:</strong> 음성 입력, LLM, 글랜스 위젯 등 기술은 성숙 — 부족한 것은 "회의 맥락 인식 + 간결한 UI" 통합</div>
+    <div class="insight-item"><span class="insight-num">3</span><strong style="color:#fff;">ROI 명확:</strong> 연 672만원 절감(팀 5명 기준), 구현 난도는 중간~낮음으로 투자 대비 효과가 매우 높음</div>
+  </div>
+
+  <div class="insight-box" style="margin-bottom:24px;">
+    <h4>🔬 미시적 인사이트</h4>
+    <div class="insight-item"><span class="insight-num">1</span><strong style="color:#fff;">프리셋 템플릿이 핵심:</strong> 1탭으로 검색 완료, 타이핑 제거, 구현 가장 쉬움 — 가장 강력한 솔루션</div>
+    <div class="insight-item"><span class="insight-num">2</span><strong style="color:#fff;">글랜스 위젯이 보조 핵심:</strong> 3초 안에 이해 가능, 정보 과부하 제거, 모바일/웹 모두 가능</div>
+    <div class="insight-item"><span class="insight-num">3</span><strong style="color:#fff;">사회적 수용성이 성패 좌우:</strong> 기술적으로 완벽해도 회의 중 부자연스러우면 사용 안 함 — 은폐적·미니멀이 필수</div>
+  </div>
+
+  <div class="quote-block">
+    <p>문제는 AI 기술의 부재가 아니라, 회의 흐름 안에 자연스럽게 녹아드는 통합의 부재다.</p>
+    <div class="author">— 리서치팀 핵심 결론</div>
+  </div>
+</div>
+
+<!-- ═══ SECTION 8 — 권고사항 ═══ -->
+<div class="section">
+  <div class="section-label"><span class="num">08</span> RECOMMENDATIONS</div>
+  <h2>권고사항 & <em>다음 단계</em></h2>
+
+  <div class="priority-grid">
+    <div class="priority-col must">
+      <h5>🔴 Must (필수)</h5>
+      <ul>
+        <li>프리셋 템플릿 시스템</li>
+        <li>글래스모피즘 오버레이 UI</li>
+        <li>글랜스어블 결과 카드</li>
+        <li>출처 표시 시스템</li>
+      </ul>
+    </div>
+    <div class="priority-col nice">
+      <h5>🟡 Nice (권장)</h5>
+      <ul>
+        <li>음성 입력 옵션</li>
+        <li>스마트 제스처</li>
+        <li>상황 인식 프롬프트</li>
+      </ul>
+    </div>
+    <div class="priority-col future">
+      <h5>🔵 Future (향후)</h5>
+      <ul>
+        <li>실시간 협업 모드</li>
+        <li>AI 기반 의제 추천</li>
+        <li>AR 글래스 통합</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="glass">
+    <h4><span class="icon" style="background:rgba(52,211,153,0.15);">🔗</span> 각 팀 연계 사항</h4>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+      <div style="background:rgba(0,0,0,0.15); border-radius:10px; padding:14px;">
+        <p style="color:#a78bfa; font-weight:700; font-size:13px;">📋 기획팀</p>
+        <p style="font-size:13px; color:#9ca3af;">이 리서치 결과를 토대로 전략 수립</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.15); border-radius:10px; padding:14px;">
+        <p style="color:#a78bfa; font-weight:700; font-size:13px;">🎨 디자인팀</p>
+        <p style="font-size:13px; color:#9ca3af;">5대 원칙을 UI/UX에 반영</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.15); border-radius:10px; padding:14px;">
+        <p style="color:#a78bfa; font-weight:700; font-size:13px;">💻 개발팀</p>
+        <p style="font-size:13px; color:#9ca3af;">기술 스택 결정 및 스펙 작성</p>
+      </div>
+      <div style="background:rgba(0,0,0,0.15); border-radius:10px; padding:14px;">
+        <p style="color:#a78bfa; font-weight:700; font-size:13px;">✅ 검증팀</p>
+        <p style="font-size:13px; color:#9ca3af;">QA 프레임워크 설계</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  <p>🔍 리서치팀 결과보고서 · 회의 중 실시간 AI 리서치를 위한 비채팅 인터랙션 설계</p>
+  <p style="margin-top:6px;">2026.03.29 · Research Team Report</p>
+</div>
+
+</body>
+</html>
